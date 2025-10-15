@@ -16,6 +16,8 @@ message = greet("Alice")
 print(message)
 ```
 
+**Example:**
+
 ```python
 def add(numb1, numb2):
         return numb1+numb2
