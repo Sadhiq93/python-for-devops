@@ -16,6 +16,20 @@ message = greet("Alice")
 print(message)
 ```
 
+```python
+def add(numb1, numb2):
+        return numb1+numb2
+print(add(3, 5))
+
+def message(name="Team"):
+        return f"Hello {name}"
+
+print ("hello")
+print (message())
+print (message("alice"))
+print(add(8, 10))
+```
+
 In this example, `greet` is a function that takes a `name` argument and returns a greeting message.
 
 ### Modules
