@@ -1,0 +1,59 @@
+Args and EnvVars
+python installs some inbuild functions which can be used such as sys for operations.
+args are used in code and can be passed at runtime.
+-------
+import sys
+def sub(numb1, numb2):
+        return numb2-numb1
+numb1 = float(sys.argv[1])
+numb2 = float(sys.argv[2])
+operator = sys.argv[3]
+
+if operator == "sub":
+        result = sub(numb2, numb1)
+        print(result)
+--------
+# python3 args.py 20 10 sub
+10.0
+-------------
+Env variables:
+
+used to store sensitive information or key value or labels to match with code modules.
+command  to see # env
+
+to export the variable use export
+
+# export Team="dev"
+
+and to use it in code import inbuilt os package
+----------------
+import os
+import sys
+
+def sub(numb1, numb2):
+    return numb1 - numb2  # Clear subtraction: numb1 - numb2
+
+# Read arguments from command line
+
+numb1 = float(sys.argv[1])
+numb2 = float(sys.argv[2])
+operator = sys.argv[3]
+
+# Perform operation
+if operator == "sub":
+    result = sub(numb1, numb2)
+    print("Result:", result)
+
+# Read environment variable
+team_name = os.getenv("Team")
+if team_name:
+    print("This code is written by", team_name)
+else:
+    print("Environment variable 'Team' is not set.")
+---------------
+output
+
+python3 env.py 10 5 sub
+Result: 5.0
+This code is written by dev
+
