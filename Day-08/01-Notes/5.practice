@@ -1,0 +1,45 @@
+# tuple
+s3_buckets = ("t2.micro", "t3.micro", "m5.large", "t2.small")
+print(s3_buckets)
+--------
+print(s3_buckets[1])
+--------
+print(s3_buckets[0:3])
+--------
+print(len(s3_buckets[1:3]))
+---------
+print(s3_buckets[1]+" and "+s3_buckets[2])
+--------
+# list
+s3_buckets = ["t2.micro", "t3.micro", "m5.large", "t2.small"]
+
+print(len(s3_buckets[1:3]))
+--------
+numbers = [1, 28, 10, -10]
+
+print(sorted(numbers))
+--------
+numbers = (1, 28, 10, -10)
+
+print(tuple(sorted(numbers)))
+
+print(type(numbers))
+----------
+numbers = [1, 28, 10, -10]
+
+numbers.sort()
+
+print(numbers)
+
+---------
+
+('t2.micro', 't3.micro', 'm5.large', 't2.small')
+t3.micro
+('t2.micro', 't3.micro', 'm5.large')
+2
+t3.micro and m5.large
+2
+[-10, 1, 10, 28]
+(-10, 1, 10, 28)
+<class 'tuple'>
+[-10, 1, 10, 28]   
