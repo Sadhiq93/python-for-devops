@@ -1,0 +1,15 @@
+import os
+custom_folders = input("enter the folders list with spaces:" ).split()
+
+for folder in custom_folders:
+    try:
+        list_of_files = os.listdir(folder)
+    except FileNotFoundError:
+        print("please provide valid name, the folder does not exist: " + folder)
+        continue
+    except PermissionError:
+        print("permission denied: " + folder)
+        break
+    print("***list of files inside a folder*** " + folder)
+    for files in list_of_files:
+        print(files)
