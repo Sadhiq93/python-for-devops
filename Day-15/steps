@@ -1,0 +1,128 @@
+Here if developer tells to create a issue in jira 
+so that whenever i enter /jira as commit/comment a ticket should be raised
+
+can be done in two steps
+
+1- github talks/makes an api call to python app which is in server
+2- python script/app should make a call to jira
+
+steps:
+1-understand api
+2-convert python script to api
+3-deploy in server
+4-add webhook to make api call
+5-conditional for particular access
+-------------------------------------------
+
+An API — short for Application Programming Interface — is a set of rules and tools that allow different software systems to communicate and interact with each other.
+Let’s break it down simply:
+
+🧠 What an API Is
+Think of an API as a waiter in a restaurant:
+* You (the client) tell the waiter (API) what you want (a request).
+* The waiter takes your order to the kitchen (the server).
+* The kitchen prepares the food (processes your request).
+* The waiter brings the food back to you (returns the response).
+You never have to go into the kitchen or see how the food is made — you just use the menu (API documentation) to know what you can ask for.
+
+⚙️ How an API Is Used
+APIs are used by software developers to connect different systems. Here’s the basic process:
+1. Send a Request A program (the client) sends a request to an API endpoint (a specific URL). Example (in HTTP):  
+
+GET https://api.weather.com/v3/weather?city=London
+Process the Request The API (on the server) receives it, talks to databases or services, and prepares a response.
+Receive a Response The API sends back structured data — usually in JSON format:
+
+
+1. {
+2.   "city": "London",
+3.   "temperature": "15°C",
+4.   "condition": "Cloudy"
+5. }
+6.   
+
+💡 Common Uses of APIs
+* Web development: Connect a frontend (website or app) to a backend service.
+* Third-party integrations: Use services like Google Maps, Stripe, or OpenAI.
+* Automation: Fetch or send data between systems automatically.
+* Mobile apps: Get live data from a server (like weather, messages, or maps).
+
+🧩 Example in Code (JavaScript)
+Here’s a simple example using the fetch() API:
+
+
+fetch("https://api.github.com/users/octocat")
+  .then(response => response.json())
+  .then(data => console.log(data));
+This code calls GitHub’s API to get information about a user.
+
+
+
+1️⃣ What an HTTP API Is
+An HTTP API is an API that uses the HTTP protocol (the same protocol your web browser uses) to send and receive data.
+* The client (like a web app or mobile app) sends an HTTP request to the server.
+* The server processes it and sends back an HTTP response.
+
+2️⃣ HTTP Methods (Verbs)
+HTTP APIs use different methods to indicate the action you want to perform:
+Method	Meaning	Example
+GET	Retrieve data	Get user info
+POST	Send new data	Create a new user
+PUT	Update existing data	Update user profile
+PATCH	Partially update data	Change user email
+DELETE	Remove data	Delete a user
+3️⃣ HTTP Request Structure
+An HTTP request usually has:
+1. URL / Endpoint – where the request is sent:
+
+
+https://api.example.com/users/123
+1. Method – GET, POST, etc.
+2. Headers – extra info like authentication:
+
+
+Authorization: Bearer <token>
+Content-Type: application/json
+1. Body – data sent (mainly for POST, PUT, PATCH):
+
+
+{
+  "name": "Alice",
+  "email": "alice@example.com"
+}
+
+4️⃣ HTTP Response Structure
+A response from an HTTP API usually contains:
+1. Status Code – indicates success or error:
+    * 200 ✅ OK
+    * 201 ✅ Created
+    * 400 ❌ Bad Request
+    * 401 ❌ Unauthorized
+    * 404 ❌ Not Found
+    * 500 ❌ Server Error
+2. Headers – metadata about the response
+3. Body – data returned (often JSON):
+
+
+{
+  "id": 123,
+  "name": "Alice",
+  "email": "alice@example.com"
+}
+
+5️⃣ Example HTTP API Call (cURL)
+
+
+curl -X GET "https://api.example.com/users/123" \
+     -H "Authorization: Bearer YOUR_API_KEY"
+* Sends a GET request to fetch the user with ID 123.
+* Authorization header is often required for protected APIs.
+
+6️⃣ Key Points
+* HTTP APIs are stateless (each request is independent).
+* JSON is the most common format for data exchange.
+* Security often uses API keys, tokens, or OAuth.
+
+
+
+
