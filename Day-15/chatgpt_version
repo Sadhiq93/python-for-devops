@@ -1,0 +1,109 @@
+from flask import Flask, jsonify, request
+import requests
+from requests.auth import HTTPBasicAuth
+import os
+import json
+
+app = Flask(__name__)
+
+# Load credentials from environment variables
+API_TOKEN = os.environ.get("JIRA_API_TOKEN")
+EMAIL = os.environ.get("JIRA_EMAIL")
+JIRA_PROJECT_KEY = os.environ.get("JIRA_PROJECT_KEY", "SID")  # default to SID if not set
+JIRA_ISSUE_TYPE_ID = os.environ.get("JIRA_ISSUE_TYPE_ID", "10009")  # default to your issue type id
+
+if not API_TOKEN or not EMAIL:
+    raise RuntimeError("JIRA_API_TOKEN and JIRA_EMAIL must be set as environment variables.")
+
+auth = HTTPBasicAuth(EMAIL, API_TOKEN)
+
+HEADERS = {
+    "Accept": "application/json",
+    "Content-Type": "application/json"
+}
+
+
+@app.route('/jira', methods=['POST'])
+def create_jira():
+    data = request.get_json(silent=True)
+    if not data:
+        return jsonify({"error": "Invalid JSON payload"}), 400
+
+    comment_body = data.get('comment', {}).get('body', '').strip()
+    if comment_body != "/jira":
+        return jsonify({"message": "Invalid trigger comment"}), 200
+
+    # Dynamic summary & description from payload
+    summary = data.get("issue_summary", "Jira ticket created from Flask")
+    description_text = data.get("issue_description", comment_body)
+
+    payload = {
+        "fields": {
+            "project": {"key": JIRA_PROJECT_KEY},
+            "summary": summary,
+            "description": {
+                "type": "doc",
+                "version": 1,
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {"type": "text", "text": description_text}
+                        ]
+                    }
+                ]
+            },
+            "issuetype": {"id": JIRA_ISSUE_TYPE_ID}
+        }
+    }
+
+    try:
+        response = requests.post(
+            "https://sab-jan.atlassian.net/rest/api/3/issue",
+            headers=HEADERS,
+            json=payload,
+            auth=auth,
+            timeout=10
+        )
+        response.raise_for_status()  # raises an exception for 4xx/5xx responses
+        return jsonify(response.json()), response.status_code
+    except requests.exceptions.HTTPError as e:
+        return jsonify({"error": "Jira API returned an error", "details": str(e), "response": response.text}), response.status_code
+    except requests.exceptions.RequestException as e:
+        return jsonify({"error": "Request to Jira failed", "details": str(e)}), 500
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
+-----------
+✅ Key Improvements:
+
+Security
+
+API token and email are loaded from environment variables.
+
+No sensitive info in the code.
+
+Dynamic Jira payload
+
+You can pass issue_summary and issue_description in the POST payload.
+
+Falls back to sensible defaults.
+
+Error handling
+
+Handles invalid JSON, HTTP errors, and network issues.
+
+Returns clear error messages.
+
+Optional configuration
+
+Project key and issue type can be set via environment variables.
+
+Example POST payload
+{
+  "comment": {"body": "/jira"},
+  "issue_summary": "Bug in production",
+  "issue_description": "Steps to reproduce the bug..."
+}
+This will create a Jira issue dynamically.
