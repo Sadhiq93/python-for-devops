@@ -1,0 +1,107 @@
+from flask import Flask, jsonify, request
+import requests
+from requests.auth import HTTPBasicAuth
+import json
+import os
+
+app = Flask(__name__)
+
+@app.route('/jira', methods=['POST'])
+def create_jira():
+    url = "https://sab-jan.atlassian.net/rest/api/3/issue"
+
+    # 🔒 Load your API token from an environment variable (much safer)
+    API_TOKEN = ""
+    EMAIL = "sab.jan.02.2001@gmail.com"
+
+    auth = HTTPBasicAuth(EMAIL, API_TOKEN)
+
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+    }
+
+    payload = {
+        "fields": {
+            "project": {
+                "key": "SID"
+            },
+            "summary": "Jira ticket created from Flask",
+            "description": {
+                "type": "doc",
+                "version": 1,
+                "content": [
+                    {
+                        "type": "paragraph",
+                        "content": [
+                            {"type": "text", "text": "This is a sample issue created via Flask!"}
+                        ]
+                    }
+                ]
+            },
+            "issuetype": {"id": "10009"}
+        }
+    }
+    data = request.get_json()
+    comment_body = data.get('comment', {}).get('body', '')
+
+    if comment_body.strip() == "/jira":
+        # your Jira API call setup here ...
+        response = requests.post(
+            url,
+            headers=headers,
+            json=payload,
+            auth=auth
+        )
+        return jsonify(response.json()), response.status_code
+    else:
+        return jsonify({"message": "Invalid trigger comment"}), 200
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=5001, debug=True)
+
+changes:
+added imports
+add url, token, summery, if condition
+
+save and check 
+# python <file>.py
+output:
+* Serving Flask app 'inti'
+ * Debug mode: on
+WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:5001
+----------
+webhook:
+
+steps:
+
+1- go to settings > webhook > create > enter url of jira as "http://<public_ip/domain>:<port>/<endpoint>"
+ex: http://13.127.18.16:5001/jira
+note: add security group 5001 port if not assigned default jira 5000
+
+enter contentType: appication/json
+Disable ssl if not present
+in events > let me select
+select issue comment and pushes
+
+finally add webhook
+
+note: webhook should show green tick mark
+
+Errors: look for correct ip/domain, port assign in sg, ssl enable/disable, issue comment is enabled
+----------
+In issue if you enter /jira
+
+201 response:
+140.82.115.62 - - [30/Oct/2025 09:23:11] "POST /jira HTTP/1.1" 201 -
+and ticket should be created in jira
+
+if other as /abc
+
+200 error response:
+140.82.115.9 - - [30/Oct/2025 09:23:34] "POST /jira HTTP/1.1" 200 -
+
+
