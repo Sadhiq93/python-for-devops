@@ -8,11 +8,11 @@ app = Flask(__name__)
 
 @app.route('/jira', methods=['POST'])
 def create_jira():
-    url = "https://sab-jan.atlassian.net/rest/api/3/issue"
+    url = ""
 
     # 🔒 Load your API token from an environment variable (much safer)
     API_TOKEN = ""
-    EMAIL = "sab.jan.02.2001@gmail.com"
+    EMAIL = ""
 
     auth = HTTPBasicAuth(EMAIL, API_TOKEN)
 
